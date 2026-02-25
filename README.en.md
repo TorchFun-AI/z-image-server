@@ -77,15 +77,66 @@ pip install -r server/requirements.txt
 
 ### 3. Download Model Weights
 
-Model weight files are managed via Git LFS. If the weight files in your local repository are LFS pointers (~135 bytes), please copy the actual files from the source directory:
+This project uses [Z-Image-Turbo](https://www.modelscope.cn/models/Tongyi-MAI/Z-Image-Turbo) as the base model. Due to the large model size (~32GB), please obtain the weights using one of the following methods:
+
+#### Method 1: Download from ModelScope (Recommended)
+
+Visit the official model page: https://www.modelscope.cn/models/Tongyi-MAI/Z-Image-Turbo
 
 ```bash
-# Example: Copy from source directory (adjust path according to your environment)
-cp /path/to/source/Z-Image-Turbo/transformer/*.safetensors Z-Image-Turbo/transformer/
-cp /path/to/source/Z-Image-Turbo/text_encoder/*.safetensors Z-Image-Turbo/text_encoder/
-cp /path/to/source/Z-Image-Turbo/vae/*.safetensors Z-Image-Turbo/vae/
-cp /path/to/source/Z-Image-Turbo/tokenizer/* Z-Image-Turbo/tokenizer/
-cp /path/to/source/Z-Image-Turbo/assets/* Z-Image-Turbo/assets/
+# Install ModelScope CLI
+pip install modelscope
+
+# Download the full model
+modelscope download --model Tongyi-MAI/Z-Image-Turbo --local_dir ./Z-Image-Turbo
+```
+
+Or clone using Git LFS:
+
+```bash
+# Ensure Git LFS is installed
+git lfs install
+
+# Clone the model repository
+git clone https://www.modelscope.cn/Tongyi-MAI/Z-Image-Turbo.git
+
+# Move the downloaded model to your project directory
+mv Z-Image-Turbo /path/to/your/project/
+```
+
+#### Method 2: Manual Download
+
+Manually download the following files from the ModelScope page and place them in the corresponding directories:
+
+| File Path | Description | Size |
+|-----------|-------------|------|
+| `transformer/diffusion_pytorch_model*.safetensors` | DiT model weights | ~24.6 GB |
+| `text_encoder/model*.safetensors` | Text encoder weights | ~8 GB |
+| `vae/diffusion_pytorch_model*.safetensors` | VAE weights | ~170 MB |
+| `tokenizer/*` | Tokenizer files | ~17 MB |
+| `assets/*` | Asset files | ~1 MB |
+| `model_index.json` | Model index | ~1 KB |
+| `configuration.json` | Configuration file | ~1 KB |
+
+#### Method 3: Use Existing Copy
+
+If you already have a local copy of the Z-Image-Turbo model, simply copy it to the project root:
+
+```bash
+cp -r /path/to/your/Z-Image-Turbo ./Z-Image-Turbo
+```
+
+#### Verify Download
+
+After downloading, verify the key files are complete:
+
+```bash
+# Check file sizes (reference)
+ls -lh Z-Image-Turbo/transformer/*.safetensors  # Should be ~24.6GB
+ls -lh Z-Image-Turbo/text_encoder/*.safetensors # Should be ~8GB
+ls -lh Z-Image-Turbo/vae/*.safetensors          # Should be ~170MB
+
+# If files are only ~135 bytes, they are Git LFS pointers and need to be re-downloaded
 ```
 
 ### 4. Start the Service

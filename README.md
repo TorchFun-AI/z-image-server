@@ -77,15 +77,66 @@ pip install -r server/requirements.txt
 
 ### 3. 下载模型权重
 
-模型权重文件通过 Git LFS 管理。如果本地仓库中的权重文件是 LFS 指针（约135字节），请从源目录复制实际文件：
+本项目使用 [Z-Image-Turbo](https://www.modelscope.cn/models/Tongyi-MAI/Z-Image-Turbo) 作为基础模型。由于模型文件较大（约 32GB），请通过以下任一方式获取：
+
+#### 方式一：从 ModelScope 下载（推荐）
+
+访问官方模型页面下载：https://www.modelscope.cn/models/Tongyi-MAI/Z-Image-Turbo
 
 ```bash
-# 示例：从源目录复制（根据您的实际环境调整路径）
-cp /path/to/source/Z-Image-Turbo/transformer/*.safetensors Z-Image-Turbo/transformer/
-cp /path/to/source/Z-Image-Turbo/text_encoder/*.safetensors Z-Image-Turbo/text_encoder/
-cp /path/to/source/Z-Image-Turbo/vae/*.safetensors Z-Image-Turbo/vae/
-cp /path/to/source/Z-Image-Turbo/tokenizer/* Z-Image-Turbo/tokenizer/
-cp /path/to/source/Z-Image-Turbo/assets/* Z-Image-Turbo/assets/
+# 安装 ModelScope CLI
+pip install modelscope
+
+# 下载完整模型
+modelscope download --model Tongyi-MAI/Z-Image-Turbo --local_dir ./Z-Image-Turbo
+```
+
+或使用 Git LFS 克隆：
+
+```bash
+# 确保已安装 Git LFS
+git lfs install
+
+# 克隆模型仓库
+git clone https://www.modelscope.cn/Tongyi-MAI/Z-Image-Turbo.git
+
+# 将下载的模型移动到项目目录
+mv Z-Image-Turbo /path/to/your/project/
+```
+
+#### 方式二：手动下载
+
+从 ModelScope 页面手动下载以下文件并放置到对应目录：
+
+| 文件路径 | 说明 | 大小 |
+|---------|------|------|
+| `transformer/diffusion_pytorch_model*.safetensors` | DiT 模型权重 | ~24.6 GB |
+| `text_encoder/model*.safetensors` | 文本编码器权重 | ~8 GB |
+| `vae/diffusion_pytorch_model*.safetensors` | VAE 权重 | ~170 MB |
+| `tokenizer/*` | 分词器文件 | ~17 MB |
+| `assets/*` | 资源文件 | ~1 MB |
+| `model_index.json` | 模型索引 | ~1 KB |
+| `configuration.json` | 配置文件 | ~1 KB |
+
+#### 方式三：使用已有副本
+
+如果您已有 Z-Image-Turbo 模型的本地副本，直接复制到项目根目录：
+
+```bash
+cp -r /path/to/your/Z-Image-Turbo ./Z-Image-Turbo
+```
+
+#### 验证下载
+
+下载完成后，检查关键文件是否完整：
+
+```bash
+# 检查文件大小（参考）
+ls -lh Z-Image-Turbo/transformer/*.safetensors  # 应约 24.6GB
+ls -lh Z-Image-Turbo/text_encoder/*.safetensors # 应约 8GB
+ls -lh Z-Image-Turbo/vae/*.safetensors          # 应约 170MB
+
+# 如果文件只有约 135 字节，说明是 Git LFS 指针，需要重新下载实际文件
 ```
 
 ### 4. 启动服务
