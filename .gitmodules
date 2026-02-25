@@ -1,0 +1,3 @@
+[submodule "Z-Image-Turbo"]
+	path = Z-Image-Turbo
+	url = https://www.modelscope.cn/Tongyi-MAI/Z-Image-Turbo.git
